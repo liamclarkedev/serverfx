@@ -1,5 +1,7 @@
 package serverfx
 
+import "time"
+
 // Option is a functional option to modify the default Server instance.
 type Option func(server *Server)
 
@@ -14,5 +16,12 @@ func WithAddress(address string) Option {
 func WithMaxHeaderBytes(bytes int) Option {
 	return func(s *Server) {
 		s.MaxHeaderBytes = bytes
+	}
+}
+
+// WithGracefulTimeout replaces the default Server GracefulTimeout with the provided one.
+func WithGracefulTimeout(timeout time.Duration) Option {
+	return func(s *Server) {
+		s.GracefulTimeout = timeout
 	}
 }

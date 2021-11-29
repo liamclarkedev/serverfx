@@ -2,6 +2,7 @@ package serverfx_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/clarke94/serverfx"
 
@@ -45,6 +46,27 @@ func TestWithMaxHeaderBytes(t *testing.T) {
 
 			if !cmp.Equal(s.MaxHeaderBytes, tt.bytes) {
 				t.Error(cmp.Diff(s.MaxHeaderBytes, tt.bytes))
+			}
+		})
+	}
+}
+
+func TestWithGracefulTimeout(t *testing.T) {
+	tests := []struct {
+		name    string
+		timeout time.Duration
+	}{
+		{
+			name:    "expect default timeout to be replaced with provided timeout",
+			timeout: 20 * time.Second,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := serverfx.New(mockHandler{}, serverfx.WithGracefulTimeout(tt.timeout))
+
+			if !cmp.Equal(s.GracefulTimeout, tt.timeout) {
+				t.Error(cmp.Diff(s.GracefulTimeout, tt.timeout))
 			}
 		})
 	}
