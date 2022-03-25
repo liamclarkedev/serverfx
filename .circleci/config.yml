@@ -1,10 +1,12 @@
 version: 2.1
 
+orbs:
+  gh: circleci/github-cli@2.1.0
+
 jobs:
   install:
-    working_directory: /go/src/github.com/clarke94/serverfx
     docker:
-        - image: circleci/golang:1.17.3
+        - image: cimg/go:1.18
     steps:
       - checkout
       - restore_cache:
@@ -19,9 +21,8 @@ jobs:
             - "/go/pkg/mod"
 
   lint:
-    working_directory: /go/src/github.com/clarke94/serverfx
     docker:
-      - image: circleci/golang:1.17.3
+      - image: cimg/go:1.18
     steps:
       - checkout
       - restore_cache:
@@ -30,13 +31,12 @@ jobs:
       - run:
           name: Run Linting
           command: |
-            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.43.0
+            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.45.2
             make lint
 
   test:
-    working_directory: /go/src/github.com/clarke94/serverfx
     docker:
-      - image: circleci/golang:1.17.3
+      - image: cimg/go:1.18
     steps:
       - checkout
       - restore_cache:
@@ -47,17 +47,16 @@ jobs:
           command: make test
 
   publish:
-    working_directory: /go/src/github.com/clarke94/serverfx
     docker:
-      - image: circleci/golang:1.17.3
+      - image: cimg/go:1.18
     steps:
       - checkout
-      - run: go get -u github.com/tcnksm/ghr
+      - gh/install
       - run:
           name: Release
           command: |
             VERSION=<< pipeline.git.tag	>>
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION}
+            gh release create ${VERSION} --title "${VERSION}" --notes "${VERSION}" --target ${CIRCLE_SHA1} --repo ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
       - run:
           name: Index
           command: |

@@ -29,8 +29,8 @@ const (
 )
 
 // Server is a http server.
-type Server struct {
-	Handler         http.Handler
+type Server[T http.Handler] struct {
+	Handler         T
 	Address         string
 	MaxHeaderBytes  int
 	GracefulTimeout time.Duration
@@ -41,8 +41,8 @@ type Server struct {
 }
 
 // New initialises a new Server with the provided Handler and Option parameters.
-func New(handler http.Handler, options ...Option) *Server {
-	server := &Server{
+func New[T http.Handler](handler T, options ...Option[T]) *Server[T] {
+	server := &Server[T]{
 		Handler:         handler,
 		Address:         "",
 		MaxHeaderBytes:  DefaultMaxHeaderBytes,
@@ -59,7 +59,7 @@ func New(handler http.Handler, options ...Option) *Server {
 }
 
 // Serve listens and serves the Server.
-func (s *Server) Serve() error {
+func (s *Server[T]) Serve() error {
 	srv := &http.Server{
 		Addr:           s.Address,
 		Handler:        s.Handler,
@@ -68,7 +68,7 @@ func (s *Server) Serve() error {
 
 	s.server = srv
 
-	go func(s *Server) {
+	go func(s *Server[T]) {
 		shutdownChan := make(chan os.Signal, 1)
 		signal.Notify(shutdownChan, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
@@ -84,7 +84,7 @@ func (s *Server) Serve() error {
 }
 
 // Shutdown shuts down the Server gracefully until the GracefulTimeout duration expires.
-func (s *Server) Shutdown() {
+func (s *Server[T]) Shutdown() {
 	s.shutdownOnce.Do(func() {
 		ctx, cancel := context.WithTimeout(context.Background(), s.GracefulTimeout)
 		defer cancel()

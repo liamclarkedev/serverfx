@@ -16,14 +16,14 @@ func TestNew(t *testing.T) {
 	tests := []struct {
 		name    string
 		handler http.Handler
-		options []serverfx.Option
-		want    *serverfx.Server
+		options []serverfx.Option[http.Handler]
+		want    *serverfx.Server[http.Handler]
 	}{
 		{
 			name:    "expect an initialised server with the defaults",
 			handler: mockHandler{},
-			options: []serverfx.Option{},
-			want: &serverfx.Server{
+			options: []serverfx.Option[http.Handler]{},
+			want: &serverfx.Server[http.Handler]{
 				Handler:         mockHandler{},
 				Address:         "",
 				MaxHeaderBytes:  serverfx.DefaultMaxHeaderBytes,
@@ -35,8 +35,8 @@ func TestNew(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := serverfx.New(tt.handler, tt.options...)
 
-			if !cmp.Equal(got, tt.want, cmpopts.IgnoreUnexported(serverfx.Server{})) {
-				t.Errorf(cmp.Diff(got, tt.want, cmpopts.IgnoreUnexported(serverfx.Server{})))
+			if !cmp.Equal(got, tt.want, cmpopts.IgnoreUnexported(serverfx.Server[http.Handler]{})) {
+				t.Errorf(cmp.Diff(got, tt.want, cmpopts.IgnoreUnexported(serverfx.Server[http.Handler]{})))
 			}
 		})
 	}
@@ -46,7 +46,7 @@ func TestServer_Serve(t *testing.T) {
 	tests := []struct {
 		name    string
 		handler http.Handler
-		options []serverfx.Option
+		options []serverfx.Option[http.Handler]
 		wantErr error
 	}{
 		{
@@ -54,11 +54,11 @@ func TestServer_Serve(t *testing.T) {
 			handler: mockHandler{
 				WithSleepTime: 1 * time.Second,
 			},
-			options: []serverfx.Option{
-				func(s *serverfx.Server) {
+			options: []serverfx.Option[http.Handler]{
+				func(s *serverfx.Server[http.Handler]) {
 					s.Address = "localhost:54932"
 				},
-				func(s *serverfx.Server) {
+				func(s *serverfx.Server[http.Handler]) {
 					s.GracefulTimeout = 1 * time.Millisecond
 				},
 			},
@@ -69,11 +69,11 @@ func TestServer_Serve(t *testing.T) {
 			handler: mockHandler{
 				WithSleepTime: 1 * time.Second,
 			},
-			options: []serverfx.Option{
-				func(s *serverfx.Server) {
+			options: []serverfx.Option[http.Handler]{
+				func(s *serverfx.Server[http.Handler]) {
 					s.Address = "localhost:54932"
 				},
-				func(s *serverfx.Server) {
+				func(s *serverfx.Server[http.Handler]) {
 					s.GracefulTimeout = 5 * time.Millisecond
 				},
 			},

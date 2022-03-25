@@ -111,6 +111,33 @@ func main() {
 }
 ```
 
+### Generic example with the Gin framework
+
+```go
+package main
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	
+	"github.com/clarke94/serverfx"
+)
+
+func main() {
+	router := gin.New()
+	server := serverfx.New[*gin.Engine](router)
+
+	server.Handler.GET("/foo", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, nil)
+	})
+
+	if err := server.Serve(); err != nil {
+		// handle error
+	}
+}
+```
+
 ## License
 
 This project uses the [MIT License](LICENSE).

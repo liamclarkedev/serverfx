@@ -7,8 +7,6 @@ linters:
   enable:
     - errcheck
     - govet
-    - structcheck
-    - unused
     - varcheck
     - depguard
     - errorlint
@@ -27,7 +25,6 @@ linters:
     - misspell
     - nestif
     - prealloc
-    - rowserrcheck
     - testpackage
     - revive
     - wsl
@@ -57,9 +54,6 @@ linters-settings:
       - unmarshal
       - unreachable
       - unusedresult
-
-  unused:
-    go: "1.17"
 
   revive:
     ignore-generated-header: true
