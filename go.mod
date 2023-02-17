@@ -1,4 +1,4 @@
-module github.com/clarke94/serverfx
+module github.com/liamclarkedev/serverfx
 
 go 1.18
 

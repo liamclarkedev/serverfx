@@ -1,7 +1,7 @@
 # serverfx
 
-[![CircleCI](https://circleci.com/gh/clarke94/serverfx/tree/main.svg?style=svg)](https://circleci.com/gh/clarke94/serverfx/tree/main)
-[![Go Reference](https://pkg.go.dev/badge/github.com/clarke94/serverfx.svg)](https://pkg.go.dev/github.com/clarke94/serverfx)
+[![CircleCI](https://circleci.com/gh/liamclarkedev/serverfx/tree/main.svg?style=svg)](https://circleci.com/gh/liamclarkedev/serverfx/tree/main)
+[![Go Reference](https://pkg.go.dev/badge/github.com/liamclarkedev/serverfx.svg)](https://pkg.go.dev/github.com/liamclarkedev/serverfx)
 
 
 serverfx provides a simple configurable HTTP Server implementation with graceful shutdown.
@@ -11,7 +11,7 @@ serverfx provides a simple configurable HTTP Server implementation with graceful
 ### Install the package
 
 ```shell
-go get -u github.com/clarke94/serverfx
+go get -u github.com/liamclarkedev/serverfx
 ```
 
 ### Usage
@@ -24,7 +24,7 @@ package foo
 import (
 	"net/http"
 	
-	"github.com/clarke94/serverfx"
+	"github.com/liamclarkedev/serverfx"
 )
 
 type Handler struct {}
@@ -49,7 +49,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/clarke94/serverfx"
+	"github.com/liamclarkedev/serverfx"
 )
 
 type Handler struct{}
@@ -80,7 +80,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/clarke94/serverfx"
+	"github.com/liamclarkedev/serverfx"
 )
 
 type Handler struct{}
@@ -121,7 +121,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	
-	"github.com/clarke94/serverfx"
+	"github.com/liamclarkedev/serverfx"
 )
 
 func main() {

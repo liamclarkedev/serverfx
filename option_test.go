@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/clarke94/serverfx"
+	"github.com/liamclarkedev/serverfx"
 
 	"github.com/google/go-cmp/cmp"
 )

@@ -61,7 +61,7 @@ jobs:
           name: Index
           command: |
             VERSION=<< pipeline.git.tag	>>
-            GOPROXY=proxy.golang.org go list -m github.com/clarke94/serverfx@${VERSION}
+            GOPROXY=proxy.golang.org go list -m github.com/liamclarkedev/serverfx@${VERSION}
 
 
 workflows:

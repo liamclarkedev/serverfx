@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/clarke94/serverfx"
+	"github.com/liamclarkedev/serverfx"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -52,7 +52,7 @@ func TestServer_Serve(t *testing.T) {
 		{
 			name: "expect the Server forcefully shutdown when the request exceeds the graceful timeout",
 			handler: mockHandler{
-				WithSleepTime: 1 * time.Second,
+				WithSleepTime: 800 * time.Millisecond,
 			},
 			options: []serverfx.Option[http.Handler]{
 				func(s *serverfx.Server[http.Handler]) {
@@ -67,14 +67,14 @@ func TestServer_Serve(t *testing.T) {
 		{
 			name: "expect the Server gracefully shutdown within the graceful timeout",
 			handler: mockHandler{
-				WithSleepTime: 1 * time.Second,
+				WithSleepTime: 100 * time.Millisecond,
 			},
 			options: []serverfx.Option[http.Handler]{
 				func(s *serverfx.Server[http.Handler]) {
 					s.Address = "localhost:54932"
 				},
 				func(s *serverfx.Server[http.Handler]) {
-					s.GracefulTimeout = 5 * time.Millisecond
+					s.GracefulTimeout = 800 * time.Millisecond
 				},
 			},
 			wantErr: nil,
@@ -90,16 +90,19 @@ func TestServer_Serve(t *testing.T) {
 			}()
 
 			go func() {
-				time.Sleep(1 * time.Second)
-				if err := syscall.Kill(syscall.Getpid(), syscall.SIGINT); err != nil {
+				time.Sleep(100 * time.Millisecond)
+				_, err := http.Get("http://localhost:54932/foo")
+				if err != nil {
 					t.Error(err)
 				}
 			}()
 
-			_, err := http.Get("http://localhost:54932/foo")
-			if err != nil {
-				t.Error(err)
-			}
+			go func() {
+				time.Sleep(200 * time.Millisecond)
+				if err := syscall.Kill(syscall.Getpid(), syscall.SIGINT); err != nil {
+					t.Error(err)
+				}
+			}()
 
 			if !cmp.Equal(<-done, tt.wantErr, cmpopts.EquateErrors()) {
 				t.Errorf(cmp.Diff(<-done, tt.wantErr, cmpopts.EquateErrors()))
